@@ -6,25 +6,40 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CB4AC94E2D1773E5004062A7 /* SDWebImageLinkPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = CB4AC94D2D1773E5004062A7 /* SDWebImageLinkPlugin */; };
+		CBA67E562D17579A002ACA28 /* ChallengeEntity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA67E542D17579A002ACA28 /* ChallengeEntity+CoreDataClass.swift */; };
+		CBA67E572D17579A002ACA28 /* ChallengeEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA67E552D17579A002ACA28 /* ChallengeEntity+CoreDataProperties.swift */; };
+		CBFFC6832D17BEE4002931B4 /* UserChallenge+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFFC6812D17BEE4002931B4 /* UserChallenge+CoreDataClass.swift */; };
+		CBFFC6842D17BEE4002931B4 /* UserChallenge+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFFC6822D17BEE4002931B4 /* UserChallenge+CoreDataProperties.swift */; };
+		CBFFC6862D17C19B002931B4 /* UserChallenge+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBFFC6852D17C19B002931B4 /* UserChallenge+Extension.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		CB533CB72D14BBFB00F59D5A /* BinBuddySw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BinBuddySw.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB533D142D1737DE00F59D5A /* BinBuddySw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BinBuddySw.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBA67E542D17579A002ACA28 /* ChallengeEntity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChallengeEntity+CoreDataClass.swift"; sourceTree = "<group>"; wrapsLines = 1; };
+		CBA67E552D17579A002ACA28 /* ChallengeEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChallengeEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CBFFC6812D17BEE4002931B4 /* UserChallenge+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserChallenge+CoreDataClass.swift"; sourceTree = "<group>"; };
+		CBFFC6822D17BEE4002931B4 /* UserChallenge+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserChallenge+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		CBFFC6852D17C19B002931B4 /* UserChallenge+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserChallenge+Extension.swift"; sourceTree = "<group>"; };
+		CBFFC6932D188FB8002931B4 /* BinBuddySw.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = BinBuddySw.xcodeproj; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CB533CCC2D14BBFE00F59D5A /* Exceptions for "BinBuddySw" folder in "BinBuddySw" target */ = {
+		CB533D292D1737E000F59D5A /* Exceptions for "BinBuddySw" folder in "BinBuddySw" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = CB533CB62D14BBFB00F59D5A /* BinBuddySw */;
+			target = CB533D132D1737DE00F59D5A /* BinBuddySw */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CB533CB92D14BBFB00F59D5A /* BinBuddySw */ = {
+		CB533D162D1737DE00F59D5A /* BinBuddySw */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CB533CCC2D14BBFE00F59D5A /* Exceptions for "BinBuddySw" folder in "BinBuddySw" target */,
+				CB533D292D1737E000F59D5A /* Exceptions for "BinBuddySw" folder in "BinBuddySw" target */,
 			);
 			path = BinBuddySw;
 			sourceTree = "<group>";
@@ -32,93 +47,115 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CB533CB42D14BBFB00F59D5A /* Frameworks */ = {
+		CB533D112D1737DE00F59D5A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB4AC94E2D1773E5004062A7 /* SDWebImageLinkPlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CB533CAE2D14BBFB00F59D5A = {
+		CB533D0B2D1737DE00F59D5A = {
 			isa = PBXGroup;
 			children = (
-				CB533CB92D14BBFB00F59D5A /* BinBuddySw */,
-				CB533CB82D14BBFB00F59D5A /* Products */,
+				CBFFC6852D17C19B002931B4 /* UserChallenge+Extension.swift */,
+				CBFFC6932D188FB8002931B4 /* BinBuddySw.xcodeproj */,
+				CBFFC6812D17BEE4002931B4 /* UserChallenge+CoreDataClass.swift */,
+				CBFFC6822D17BEE4002931B4 /* UserChallenge+CoreDataProperties.swift */,
+				CBA67E542D17579A002ACA28 /* ChallengeEntity+CoreDataClass.swift */,
+				CBA67E552D17579A002ACA28 /* ChallengeEntity+CoreDataProperties.swift */,
+				CB533D162D1737DE00F59D5A /* BinBuddySw */,
+				CB533D152D1737DE00F59D5A /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		CB533CB82D14BBFB00F59D5A /* Products */ = {
+		CB533D152D1737DE00F59D5A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CB533CB72D14BBFB00F59D5A /* BinBuddySw.app */,
+				CB533D142D1737DE00F59D5A /* BinBuddySw.app */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CBF367222D18AE06000A175F /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CB533CB62D14BBFB00F59D5A /* BinBuddySw */ = {
+		CB533D132D1737DE00F59D5A /* BinBuddySw */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CB533CCD2D14BBFE00F59D5A /* Build configuration list for PBXNativeTarget "BinBuddySw" */;
+			buildConfigurationList = CB533D2A2D1737E000F59D5A /* Build configuration list for PBXNativeTarget "BinBuddySw" */;
 			buildPhases = (
-				CB533CB32D14BBFB00F59D5A /* Sources */,
-				CB533CB42D14BBFB00F59D5A /* Frameworks */,
-				CB533CB52D14BBFB00F59D5A /* Resources */,
+				CB533D102D1737DE00F59D5A /* Sources */,
+				CB533D112D1737DE00F59D5A /* Frameworks */,
+				CB533D122D1737DE00F59D5A /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CB533CB92D14BBFB00F59D5A /* BinBuddySw */,
+				CB533D162D1737DE00F59D5A /* BinBuddySw */,
 			);
 			name = BinBuddySw;
 			packageProductDependencies = (
+				CB4AC94D2D1773E5004062A7 /* SDWebImageLinkPlugin */,
 			);
 			productName = BinBuddySw;
-			productReference = CB533CB72D14BBFB00F59D5A /* BinBuddySw.app */;
+			productReference = CB533D142D1737DE00F59D5A /* BinBuddySw.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		CB533CAF2D14BBFB00F59D5A /* Project object */ = {
+		CB533D0C2D1737DE00F59D5A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
-					CB533CB62D14BBFB00F59D5A = {
+					CB533D132D1737DE00F59D5A = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
-			buildConfigurationList = CB533CB22D14BBFB00F59D5A /* Build configuration list for PBXProject "BinBuddySw" */;
+			buildConfigurationList = CB533D0F2D1737DE00F59D5A /* Build configuration list for PBXProject "BinBuddySw" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = CB533CAE2D14BBFB00F59D5A;
+			mainGroup = CB533D0B2D1737DE00F59D5A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CB4AC94C2D1773E5004062A7 /* XCRemoteSwiftPackageReference "SDWebImageLinkPlugin" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = CB533CB82D14BBFB00F59D5A /* Products */;
+			productRefGroup = CB533D152D1737DE00F59D5A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = CBF367222D18AE06000A175F /* Products */;
+					ProjectRef = CBFFC6932D188FB8002931B4 /* BinBuddySw.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
-				CB533CB62D14BBFB00F59D5A /* BinBuddySw */,
+				CB533D132D1737DE00F59D5A /* BinBuddySw */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CB533CB52D14BBFB00F59D5A /* Resources */ = {
+		CB533D122D1737DE00F59D5A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -128,17 +165,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CB533CB32D14BBFB00F59D5A /* Sources */ = {
+		CB533D102D1737DE00F59D5A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBA67E562D17579A002ACA28 /* ChallengeEntity+CoreDataClass.swift in Sources */,
+				CBFFC6832D17BEE4002931B4 /* UserChallenge+CoreDataClass.swift in Sources */,
+				CBFFC6842D17BEE4002931B4 /* UserChallenge+CoreDataProperties.swift in Sources */,
+				CBFFC6862D17C19B002931B4 /* UserChallenge+Extension.swift in Sources */,
+				CBA67E572D17579A002ACA28 /* ChallengeEntity+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		CB533CCE2D14BBFE00F59D5A /* Debug */ = {
+		CB533D2B2D1737E000F59D5A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -166,7 +208,7 @@
 			};
 			name = Debug;
 		};
-		CB533CCF2D14BBFE00F59D5A /* Release */ = {
+		CB533D2C2D1737E000F59D5A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -194,7 +236,7 @@
 			};
 			name = Release;
 		};
-		CB533CD02D14BBFE00F59D5A /* Debug */ = {
+		CB533D2D2D1737E000F59D5A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -257,7 +299,7 @@
 			};
 			name = Debug;
 		};
-		CB533CD12D14BBFE00F59D5A /* Release */ = {
+		CB533D2E2D1737E000F59D5A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -316,25 +358,44 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CB533CB22D14BBFB00F59D5A /* Build configuration list for PBXProject "BinBuddySw" */ = {
+		CB533D0F2D1737DE00F59D5A /* Build configuration list for PBXProject "BinBuddySw" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CB533CD02D14BBFE00F59D5A /* Debug */,
-				CB533CD12D14BBFE00F59D5A /* Release */,
+				CB533D2D2D1737E000F59D5A /* Debug */,
+				CB533D2E2D1737E000F59D5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CB533CCD2D14BBFE00F59D5A /* Build configuration list for PBXNativeTarget "BinBuddySw" */ = {
+		CB533D2A2D1737E000F59D5A /* Build configuration list for PBXNativeTarget "BinBuddySw" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CB533CCE2D14BBFE00F59D5A /* Debug */,
-				CB533CCF2D14BBFE00F59D5A /* Release */,
+				CB533D2B2D1737E000F59D5A /* Debug */,
+				CB533D2C2D1737E000F59D5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CB4AC94C2D1773E5004062A7 /* XCRemoteSwiftPackageReference "SDWebImageLinkPlugin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageLinkPlugin";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CB4AC94D2D1773E5004062A7 /* SDWebImageLinkPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB4AC94C2D1773E5004062A7 /* XCRemoteSwiftPackageReference "SDWebImageLinkPlugin" */;
+			productName = SDWebImageLinkPlugin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = CB533CAF2D14BBFB00F59D5A /* Project object */;
+	rootObject = CB533D0C2D1737DE00F59D5A /* Project object */;
 }

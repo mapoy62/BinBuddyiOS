@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  BinBuddySw
 //
-//  Created by OYuuyuMP on 19/12/24.
+//  Created by OYuuyuMP on 21/12/24.
 //
 
 import UIKit
