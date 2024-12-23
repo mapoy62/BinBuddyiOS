@@ -495,6 +495,38 @@
                                             <outlet property="collectionView" destination="ab2-3P-WNQ" id="0Or-fH-kot"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetCell" rowHeight="174" id="yVC-vI-rCF" customClass="TweetTableViewCell" customModule="BinBuddySw" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="201" width="393" height="174"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yVC-vI-rCF" id="nig-f4-hCa">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="174"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XIh-G2-nOO">
+                                                    <rect key="frame" x="35" y="26" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3CA-MA-hze">
+                                                    <rect key="frame" x="35" y="67" width="323" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="XPu-so-sOA"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="XIh-G2-nOO" firstAttribute="leading" secondItem="nig-f4-hCa" secondAttribute="leadingMargin" constant="15" id="1rm-HQ-3sw"/>
+                                                <constraint firstItem="3CA-MA-hze" firstAttribute="top" secondItem="XIh-G2-nOO" secondAttribute="bottom" constant="20" id="V8p-ee-r2r"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="3CA-MA-hze" secondAttribute="trailing" constant="15" id="bjG-Oo-5eV"/>
+                                                <constraint firstItem="3CA-MA-hze" firstAttribute="leading" secondItem="nig-f4-hCa" secondAttribute="leadingMargin" constant="15" id="bpH-Yf-cOg"/>
+                                                <constraint firstItem="XIh-G2-nOO" firstAttribute="top" secondItem="nig-f4-hCa" secondAttribute="topMargin" constant="15" id="ftE-BB-nXK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
