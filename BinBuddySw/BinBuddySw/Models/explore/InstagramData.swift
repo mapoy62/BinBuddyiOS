@@ -10,7 +10,7 @@ import Foundation
 struct InstagramData {
     static let categories: [InstagramCategory] = [
         InstagramCategory(
-            title: "Moda Sustentable",
+            title: "Moda Sustentableeee Titleee",
             profiles: [
                 InstagramProfile(
                     username: "AleVintage",
