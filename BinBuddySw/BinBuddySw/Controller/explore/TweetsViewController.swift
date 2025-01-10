@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 class TweetsViewController: UIViewController, UICollectionViewDataSource
                                 //UITableViewDataSource,UITableViewDelegate
@@ -14,8 +15,13 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
     
     @IBOutlet weak var instagramCollectionView: UICollectionView!
     
+    @IBOutlet weak var mapView: MKMapView!
+    
     private var instagramProfiles: [InstagramProfile] = []
     private let instagramService = InstagramService()
+    
+    private var recyclingEvents: [RecyclingEvent] = []
+    private let recyclingEventService = RecyclingEventService()
 
     
     
@@ -43,7 +49,7 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
     }
     
     private var tweets: [Tweet] = [] // Array de tweets
-        private let twitterService = TwitterService() // Servicio para la API de Twitter
+    private let twitterService = TwitterService() // Servicio para la API de Twitter
 
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -56,7 +62,12 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
             collectionView.dataSource = self
             collectionView.delegate = self
             
+            //Configuración del MapView
+            mapView.delegate = self
+            
+            
             fetchInstagramProfiles()
+            fetchRecyclingEvents()
 
             if let cachedTweets = loadTweetsFromLocalStorage() {
                     // Usando los tweets almacenados
@@ -69,24 +80,6 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
                 }
         }
     
-    /*
-
-        // MARK: - UITableViewDataSource
-        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return tweets.count
-        }
-
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath)
-            let tweet = tweets[indexPath.row]
-
-            // Configurar la celda
-            //cell.textLabel?.text = tweet.author // Autor del tweet
-            cell.detailTextLabel?.text = tweet.text // Texto del tweet
-
-            return cell
-        }
-     */
 
     private func fetchInstagramProfiles() {
         instagramService.fetchInstagramProfiles { [weak self] result in
@@ -123,14 +116,6 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
                     }
                 }
             }
-             /*
-            self.tweets = [
-                    Tweet(id: "1877513938138472927", text: "RT @Alecus62: #mineria #Alecus #Medioambiente https://t.co/9DnKI3YY3C"),
-                    Tweet(id: "1877513424910848490", text: "🌍❄️ ¡2025, el Año Internacional de la Conservación de los #Glaciares! ❄️🌍"),
-                    Tweet(id: "1877513380224708885", text: "#MedioAmbiente Uruguay 🇺🇾 #Rocha 👇🏾 https://t.co/LBWl87UbGZ")
-                ]
-                self.tableView.reloadData()
-              */
         }
 
         private func showError(_ message: String) {
@@ -173,6 +158,60 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
             return nil
     }
 
+    
+    private func fetchRecyclingEvents() {
+        recyclingEventService.fetchRecyclingEvents { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let events):
+                    self?.recyclingEvents = events
+                    self?.addEventsToMap()
+
+                    // Encontrar el evento más próximo y centrar el mapa
+                    if let nextEvent = self?.getNextEvent() {
+                        self?.centerMapOnEvent(nextEvent)
+                    }
+                case .failure(let error):
+                    print(self?.recyclingEvents)
+                    self?.showError(error.localizedDescription)
+                    print("Error al obtener eventos de reciclaje: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    
+    private func addEventsToMap() {
+        for event in recyclingEvents {
+            let annotation = MKPointAnnotation()
+            annotation.title = event.name
+            annotation.subtitle = "\(event.points) puntos - \(event.description)"
+            annotation.coordinate = CLLocationCoordinate2D(latitude: event.locationLat, longitude: event.locationLong)
+            mapView.addAnnotation(annotation)
+        }
+    }
+
+    private func getNextEvent() -> RecyclingEvent? {
+        let currentDate = Date()
+
+        // Filtrar eventos futuros y encontrar el más próximo
+        return recyclingEvents
+            .filter { $0.eventDate ?? Date.distantPast >= currentDate }
+            .min(by: { ($0.eventDate ?? Date.distantFuture) < ($1.eventDate ?? Date.distantFuture) })
+    }
+
+    private func centerMapOnEvent(_ event: RecyclingEvent) {
+        let coordinate = CLLocationCoordinate2D(latitude: event.locationLat, longitude: event.locationLong)
+
+        // Configurar el rango de zoom
+        let region = MKCoordinateRegion(
+            center: coordinate,
+            latitudinalMeters: 5000, // Rango en metros
+            longitudinalMeters: 5000
+        )
+        mapView.setRegion(region, animated: true)
+    }
+
 }
 
 
@@ -199,4 +238,36 @@ extension TweetsViewController: UICollectionViewDelegate {
         }
     }
 }
+
+extension TweetsViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "RecyclingEventPin"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            annotationView?.glyphTintColor = .green
+
+            // Botón de acción para abrir más detalles
+            let button = UIButton(type: .detailDisclosure)
+            annotationView?.rightCalloutAccessoryView = button
+        } else {
+            annotationView?.annotation = annotation
+        }
+
+        return annotationView
+    }
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        guard let annotation = view.annotation else { return }
+
+        // Buscar el evento correspondiente
+        if let event = recyclingEvents.first(where: { $0.name == annotation.title }) {
+            print("Evento seleccionado: \(event.name)")
+            // Aquí puedes abrir una nueva vista o mostrar un modal con más detalles
+        }
+    }
+}
+
 
