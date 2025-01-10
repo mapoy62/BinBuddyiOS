@@ -12,18 +12,34 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
 {    
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var instagramCollectionView: UICollectionView!
+    
+    private var instagramProfiles: [InstagramProfile] = []
+    private let instagramService = InstagramService()
+
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tweets.count
+        if collectionView == instagramCollectionView {
+                    return instagramProfiles.count
+                } else {
+                    return tweets.count
+                }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TweetCell", for: indexPath) as! TweetCollectionViewCell
-                let tweet = tweets[indexPath.item]
-
-                // Configurar la celda
-                cell.configure(with: tweet, image: nil) // Aquí puedes agregar lógica para cargar imágenes si es necesario
-
-                return cell
+        
+        if collectionView == instagramCollectionView {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InstagramProfileCell", for: indexPath) as! InstagramProfileCollectionViewCell
+                    let profile = instagramProfiles[indexPath.item]
+                    cell.configure(with: profile)
+                    return cell
+                } else {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TweetCell", for: indexPath) as! TweetCollectionViewCell
+                    let tweet = tweets[indexPath.item]
+                    cell.configure(with: tweet, image: nil)
+                    return cell
+                }
     }
     
     private var tweets: [Tweet] = [] // Array de tweets
@@ -31,10 +47,16 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
 
         override func viewDidLoad() {
             super.viewDidLoad()
+            
+            // Configuración del Collection View para los perfiles
+            instagramCollectionView.dataSource = self
+            instagramCollectionView.delegate = self
 
-            // Configurar la tabla
+            // Configurar la tabla de tweets
             collectionView.dataSource = self
             collectionView.delegate = self
+            
+            fetchInstagramProfiles()
 
             if let cachedTweets = loadTweetsFromLocalStorage() {
                     // Usando los tweets almacenados
@@ -66,7 +88,22 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
         }
      */
 
-        // MARK: - Fetch Tweets
+    private func fetchInstagramProfiles() {
+        instagramService.fetchInstagramProfiles { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let profiles):
+                    self?.instagramProfiles = profiles
+                    self?.instagramCollectionView.reloadData()
+                case .failure(let error):
+                    print("Error al obtener perfiles de Instagram: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+        
+    // MARK: - Fetch Tweets
         private func fetchTweets() {
             
             twitterService.fetchTweets(with: "MedioAmbiente", maxResults: 10) { [weak self] result in
@@ -151,3 +188,15 @@ extension TweetsViewController: UICollectionViewDelegateFlowLayout {
         return 16 // Espaciado entre las celdas
     }
 }
+
+extension TweetsViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == instagramCollectionView {
+            let profile = instagramProfiles[indexPath.item]
+            if let url = URL(string: profile.urlPage) {
+                UIApplication.shared.open(url)
+            }
+        }
+    }
+}
+

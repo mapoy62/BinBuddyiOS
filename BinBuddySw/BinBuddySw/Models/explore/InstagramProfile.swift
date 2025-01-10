@@ -7,9 +7,10 @@
 
 import Foundation
 
-struct InstagramProfile {
+struct InstagramProfile: Codable {
+    let id: Int
+    let category: String
     let username: String
-    let displayName: String
-    let profileImageURL: String
-    let bio: String
+    let imageUrl: String
+    let urlPage: String
 }

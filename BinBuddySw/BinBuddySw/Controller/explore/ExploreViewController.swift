@@ -10,9 +10,7 @@ import UIKit
 class ExploreViewController: UIViewController {
     
     //@IBOutlet weak var tableView: UITableView!
-    
-    var categories = InstagramData.categories
-    
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()

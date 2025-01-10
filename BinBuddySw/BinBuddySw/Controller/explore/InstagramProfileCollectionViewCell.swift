@@ -2,38 +2,31 @@
 //  InstagramProfileCollectionViewCell.swift
 //  BinBuddySw
 //
-//  Created by OYuuyuMP on 22/12/24.
+//  Created by OYuuyuMP on 10/01/25.
 //
 
 import UIKit
-import SDWebImage
 
 class InstagramProfileCollectionViewCell: UICollectionViewCell {
-
     @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var bioLabel: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Configurar la apariencia inicial
-        setupUI()
-    }
+    @IBOutlet weak var usernameLabe: UILabel!
     
-    func setupUI() {
-            // Asegúrate de que profileImageView no es nil antes de modificar sus propiedades
-            profileImageView?.layer.cornerRadius = profileImageView.frame.width / 2
-            profileImageView?.clipsToBounds = true
-        }
-        
-        func configure(with profile: InstagramProfile) {
-            usernameLabel.text = "@\(profile.username)"
-            bioLabel.text = profile.bio
-            if let url = URL(string: profile.profileImageURL) {
-                        profileImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
-                    } else {
-                        profileImageView.image = UIImage(named: "placeholder")
+    @IBOutlet weak var categoryLabel: UILabel!
+    
+    func configure(with profile: InstagramProfile) {
+        usernameLabe.text = profile.username
+        categoryLabel.text = profile.category
+
+            // Cargar imagen desde URL
+            if let url = URL(string: profile.imageUrl) {
+                URLSession.shared.dataTask(with: url) { data, _, _ in
+                    if let data = data, let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.profileImageView.image = image
+                        }
                     }
+                }.resume()
+            }
         }
-    
 }
