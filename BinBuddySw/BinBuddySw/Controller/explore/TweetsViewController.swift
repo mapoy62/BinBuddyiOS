@@ -218,8 +218,8 @@ class TweetsViewController: UIViewController, UICollectionViewDataSource
 extension TweetsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Ancho de la celda = 80% del ancho del UICollectionView
-        let width = collectionView.frame.width * 0.8
-        let height = collectionView.frame.height * 0.9
+        let width = collectionView.frame.width
+        let height = collectionView.frame.height * 0.5
         return CGSize(width: width, height: height)
     }
 
