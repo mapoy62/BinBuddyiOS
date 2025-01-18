@@ -12,208 +12,155 @@ import CoreData
 
 class ChallengeDetailViewController: UIViewController {
     
-    @IBOutlet weak var imageChallengeView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descLabel: UILabel!
-    @IBOutlet weak var impactLabel: UILabel!
-    @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var shareFBButton: UIButton!
-    @IBOutlet weak var shareTwButton: UIButton!
-    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var progressBar: UIProgressView!
+    @IBOutlet weak var dayStackView: UIStackView!
     
-    @IBOutlet var dayButtons: [UIButton]!
-    
-    
-    
-    var challenge: ChallengeEntity?
-    var userChallenge: UserChallenge?
-    
-    
+    var challengeID: Int?
+    private var dayCheckboxes: [DayCheckboxView] = []
+    private var totalDays: Int = 7 // Por defecto, el reto es de 7 días
+    private var challengeDetail: ChallengeDetail?
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
-        loadUserChallenge()
+        fetchChallengeDetails()
     }
     
     
-    func setupUI() {
-        guard let challenge = challenge else { return }
-        
-        titleLabel.text = challenge.name
-        descLabel.text = challenge.desc
-        impactLabel.text = "Impacto Ambiental: \(challenge.impactMetric ?? "None")"
-        //TO-DO: AGREGAR TOTAL IMPACT A ENTIDAD
-        progressView.progress = min(Float(challenge.impactPerUnit) / 100.0, 1.0) // Ajusta según la lógica de impacto
-        
-        if let urlString = challenge.imgUrl, let url = URL(string: urlString) {
-            imageChallengeView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"), options: .highPriority, completed: { (image, error, cacheType, url) in
-                if let error = error {
-                    print("Error al cargar la imagen: \(error.localizedDescription)")
-                    self.imageChallengeView.image = UIImage(named: "placeholder")
-                } else {
-                    print("Imagen cargada exitosamente desde: \(url?.absoluteString ?? "URL desconocida")")
-                }
-            })
-        } else {
-            imageChallengeView.image = UIImage(named: "placeholder")
-            print("URL de imagen inválida para desafío: \(challenge.name ?? "No title found")")
-        }
-        
-        // Configurar apariencia de la vista modal (opcional)
-        self.view.backgroundColor = UIColor.white
-        self.view.layer.cornerRadius = 10
-        self.view.clipsToBounds = true
-        
-        for button in dayButtons {
-                if let dayTitle = button.title(for: .normal),
-                   let day = DayOfWeek(rawValue: dayTitle) {
-                    button.accessibilityLabel = day.rawValue
-                    button.accessibilityTraits = button.isSelected ? [.button, .selected] : [.button]
-                }
-            }
-    }
+    //SetUp UI and dorners on images
+    private func setupUI() {
+        // Configuración de la barra de progreso
+        progressBar.progress = 0.0
+        progressBar.layer.cornerRadius = 5
+        progressBar.clipsToBounds = true
 
-    func loadUserChallenge() {
-            guard let challenge = challenge else { return }
-            let context = DataManager.shared.persistentContainer.viewContext
-            let fetchRequest: NSFetchRequest<UserChallenge> = UserChallenge.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "challenge == %@", challenge)
+        // Configuración de la imagen circular
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2
+        imageView.clipsToBounds = true
 
-            do {
-                let results = try context.fetch(fetchRequest)
-                if let userChallenge = results.first {
-                    self.userChallenge = userChallenge
-                    updateUIWithUserChallenge()
-                } else {
-                    let newUserChallenge = UserChallenge(context: context)
-                                newUserChallenge.id = UUID()
-                                newUserChallenge.challenge = challenge
-                                newUserChallenge.daysCompletedSet = Set<DayOfWeek>() // Asignar un Set vacío
-                                newUserChallenge.totalImpact = 0.0
-                                try context.save()
-                                self.userChallenge = newUserChallenge
-                                updateUIWithUserChallenge()
-                }
-            } catch {
-                print("Error al cargar UserChallenge: \(error.localizedDescription)")
-            }
-        }
+        // Configuración de los StackViews
+        dayStackView.axis = .horizontal
+        dayStackView.alignment = .center
+        dayStackView.spacing = 16
+        dayStackView.distribution = .fillEqually
 
-        func updateUIWithUserChallenge() {
-            guard let userChallenge = userChallenge else { return }
-            let daysCompleted = userChallenge.daysCompleted
-
-            for button in dayButtons {
-                if let day = DayOfWeek(rawValue: button.title(for: .normal) ?? "") {
-                    button.isSelected = ((daysCompleted?.value(forKey: day.rawValue)) != nil)
-                    updateButtonAppearance(button, isSelected: button.isSelected)
-                }
-            }
-
-            // Actualizar el progreso basado en totalImpact
-            progressView.progress = min(Float(userChallenge.totalImpact) / 100.0, 1.0)
-        }
-    
-    
-    @IBAction func dayButtonTapped(_ sender: UIButton) {
-        guard let dayTitle = sender.title(for: .normal),
-                  let day = DayOfWeek(rawValue: dayTitle) else {
-                print("Día no reconocido")
-                return
-            }
-
-            print("Botón \(day.rawValue) tocado. Estado actual: \(sender.isSelected)")
-
-            if sender.isSelected {
-                sender.isSelected = false
-                userChallenge?.daysCompletedSet.remove(day)
-                // Opcional: Reducir el impacto acumulado si se deselecciona un día
-                userChallenge?.totalImpact -= challenge?.impactPerUnit ?? 0.0
-                print("Día \(day.rawValue) deseleccionado.")
-            } else {
-                sender.isSelected = true
-                userChallenge?.daysCompletedSet.insert(day)
-                // Actualizar el impacto acumulado
-                userChallenge?.totalImpact += challenge?.impactPerUnit ?? 0.0
-                print("Día \(day.rawValue) seleccionado.")
-            }
-
-            updateButtonAppearance(sender, isSelected: sender.isSelected)
-            updateProgressView()
-
-            // Guardar los cambios en Core Data
-            DataManager.shared.saveContext()
+        /*
+        rewardsStackView.axis = .horizontal
+        rewardsStackView.alignment = .center
+        rewardsStackView.spacing = 16
+        rewardsStackView.distribution = .fillEqually
+        */
     }
     
-    func updateButtonAppearance(_ button: UIButton, isSelected: Bool) {
-        let imageName = isSelected ? "largecircle.fill.circle" : "circle"
-            let tintColor = isSelected ? UIColor.systemBlue : UIColor.lightGray
-
-            if let image = UIImage(systemName: imageName)?.withRenderingMode(.alwaysTemplate) {
-                UIView.transition(with: button, duration: 0.2, options: .transitionCrossDissolve, animations: {
-                    button.setImage(image, for: .normal)
-                    button.tintColor = tintColor
-                }, completion: nil)
-            } else {
-                print("Error: Imagen \(imageName) no encontrada en SF Symbols.")
-            }
+    private func fetchChallengeDetails() {
+        guard let challengeID = challengeID else {
+            print("No se proporcionó un ID de desafío.")
+            return
         }
 
-        func updateProgressView() {
-            if let totalImpact = userChallenge?.totalImpact {
-                    // Supongamos que el impacto objetivo es 100.0 para el 100%
-                    let progress = min(Float(totalImpact) / 100.0, 1.0)
-                    progressView.progress = progress
-
-                    // Mostrar porcentaje
-                    let percentage = Int(progress * 100)
-                    impactLabel.text = "Impacto Ambiental: \(percentage)% (\(totalImpact) \(challenge?.impactMetric ?? ""))"
+        ChallengeService.fetchChallengeDetails(by: challengeID) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let detail):
+                    self?.challengeDetail = detail
+                    self?.updateUI(with: detail)
+                    print("")
+                case .failure(let error):
+                    self?.showError(message: "Error: \(error.localizedDescription)")
+                    print("Error: \(error.localizedDescription)")
                 }
+            }
         }
-    
-    
-    @IBAction func shareFacebookTapped(_ sender: UIButton) {
-        share(content: "Estoy participando en el desafío: \(challenge?.name ?? "") #BinBuddySw", image: challenge?.imgUrl != nil ? UIImage(named: "placeholder") : nil)
     }
     
-    
-    @IBAction func shareTwitterTapped(_ sender: UIButton) {
-        share(content: "Estoy participando en el desafío: \(challenge?.name ?? "") #BinBuddySw", image: challenge?.imgUrl != nil ? UIImage(named: "placeholder") : nil)
+    private func updateUI(with challenge: ChallengeDetail) {
+            titleLabel.text = challenge.name
+            descLabel.text = challenge.description
 
-    }
-    
-    func share(content: String, image: UIImage?) {
-            var items: [Any] = [content]
-            if let image = image {
-                items.append(image)
+            // Cargar imagen con SDWebImage
+        if let url = URL(string: challenge.imgUrl ?? "") {
+                imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
             }
 
-            let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
-            activityVC.excludedActivityTypes = [.assignToContact, .addToReadingList, .saveToCameraRoll]
+            // Configurar checkboxes de días
+            setupDayCheckboxes(for: totalDays)
 
-            // Para iPad, configurar el popoverPresentationController
-            if let popoverController = activityVC.popoverPresentationController {
-                popoverController.sourceView = self.view
-                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-                popoverController.permittedArrowDirections = []
-            }
+            // Configurar recompensas
+            //setupRewards(challenge.rewards)
 
-            present(activityVC, animated: true, completion: nil)
+            // Actualizar barra de progreso
+        updateProgress(progress: challenge.progress ?? 0)
         }
     
-    @IBAction func closeButtonTapped(_ sender: UIButton) {
-        dismiss(animated: true , completion: nil)
+    private func setupDayCheckboxes(for totalDays: Int) {
+            dayStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+            for day in 1...totalDays {
+                let dayView = DayCheckboxView(day: day)
+                dayView.onButtonTapped = { [weak self] in
+                    self?.updateProgressDynamically()
+                }
+                dayCheckboxes.append(dayView)
+                dayStackView.addArrangedSubview(dayView)
+            }
+        }
+
+    private func updateProgressDynamically() {
+            let completedDays = dayCheckboxes.filter { $0.isSelected() }.count
+            let progress = Float(completedDays) / Float(dayCheckboxes.count)
+            updateProgress(progress: progress)
+    }
+
+    private func updateProgress(progress: Float) {
+        progressBar.setProgress(progress, animated: true)
     }
     
     /*
-    // MARK: - Navigation
+     private func setupRewards(_ rewards: ChallengeRewards) {
+             rewardsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+             let rewardIcons = [
+                 ("services", rewards.services),
+                 ("environment", rewards.environment),
+                 ("entertainment", rewards.entertainment),
+                 ("education", rewards.education)
+             ]
 
+             for reward in rewardIcons {
+                 let rewardView = createRewardView(title: reward.1, iconName: reward.0)
+                 rewardsStackView.addArrangedSubview(rewardView)
+             }
+     }
+     
+     private func createRewardView(title: String, iconName: String) -> UIView {
+             let stackView = UIStackView()
+             stackView.axis = .vertical
+             stackView.alignment = .center
+             stackView.spacing = 4
+
+             let iconImageView = UIImageView(image: UIImage(named: iconName))
+             iconImageView.contentMode = .scaleAspectFit
+             iconImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+             iconImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+
+             let titleLabel = UILabel()
+             titleLabel.text = title
+             titleLabel.font = UIFont.systemFont(ofSize: 12)
+             titleLabel.textAlignment = .center
+
+             stackView.addArrangedSubview(iconImageView)
+             stackView.addArrangedSubview(titleLabel)
+
+             return stackView
+         }
+     */
+    
+    private func showError(message: String) {
+            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
 }

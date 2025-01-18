@@ -7,123 +7,83 @@
 
 import UIKit
 import CoreData
+import Foundation
 
-class ChallengesViewController: UIViewController {
+class ChallengesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
 
     @IBOutlet weak var tableView: UITableView!
     
-    
-    var challenges: [ChallengeEntity] = []
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var challenges: [Challenge] = []
 
-        setupTableView()
-        loadChallenges()
-    }
-    
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            self.title = "Challenges"
 
-    func setupTableView() {
-        tableView.delegate = self
+            // Configuración del TableView
             tableView.dataSource = self
+            tableView.delegate = self
 
-            // Opcional: Configurar el estilo de la tabla
+            // Estilo de la tabla
             tableView.separatorStyle = .none
+            tableView.estimatedRowHeight = 100
+            tableView.rowHeight = UITableView.automaticDimension
+
+            // Cargar desafíos
+            loadChallenges()
+        }
+
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return challenges.count
+        }
+
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ChallengeCell", for: indexPath) as? ChallengeTableViewCell else {
+                fatalError("No se pudo cargar la celda personalizada")
+            }
+            let challenge = challenges[indexPath.row]
+            cell.configure(with: challenge)
+            return cell
         }
     
-    func loadChallenges() {
-        // Mostrar un indicador de actividad
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.center = view.center
-        activityIndicator.startAnimating()
-        view.addSubview(activityIndicator)
-        
-        // Llenar la base de datos desde el backend
-        DataManager.shared.fillDatabase { [weak self] in
-            DispatchQueue.main.async {
-                // Obtener los desafíos de Core Data
-                self?.challenges = DataManager.shared.getAllChallenges()
-                self?.tableView.reloadData()
-                activityIndicator.stopAnimating()
-                activityIndicator.removeFromSuperview()
-                
-                if self?.challenges.isEmpty ?? true {
-                    self?.showNoChallengesMessage()
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let selectedChallenge = challenges[indexPath.row]
+
+                if let detailVC = storyboard?.instantiateViewController(withIdentifier: "ChallengeDetailViewController") as? ChallengeDetailViewController {
+                    detailVC.challengeID = selectedChallenge.id
+                    navigationController?.pushViewController(detailVC, animated: true)
+                }
+        }
+
+
+
+        private func loadChallenges() {
+            if let savedChallenges = ChallengeDataManager.shared.loadChallenges() {
+                // Cargar desde almacenamiento local
+                self.challenges = savedChallenges
+                self.tableView.reloadData()
+                print("Cargando desafíos desde almacenamiento local")
+            } else {
+                // Cargar desde el backend
+                ChallengeDataManager.shared.fetchChallenges { [weak self] result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let fetchedChallenges):
+                            self?.challenges = fetchedChallenges
+                            self?.tableView.reloadData()
+                            print("Desafíos cargados desde el backend")
+                        case .failure(let error):
+                            self?.showError(message: error.localizedDescription)
+                        }
+                    }
                 }
             }
         }
-    }
-    
-    func showNoChallengesMessage() {
-            let messageLabel = UILabel()
-            messageLabel.text = "No hay desafíos disponibles."
-            messageLabel.textAlignment = .center
-            messageLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-            messageLabel.textColor = .gray
-            messageLabel.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(messageLabel)
 
-            NSLayoutConstraint.activate([
-                messageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                messageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
+        private func showError(message: String) {
+            let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
         }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
-
-extension ChallengesViewController: UITableViewDelegate, UITableViewDataSource {
-
-    // Número de filas en la sección
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return challenges.count
-    }
-
-    // Configurar la celda
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ChallengeCell", for: indexPath) as? ChallengeCell else {
-            return UITableViewCell()
-        }
-
-        let challenge = challenges[indexPath.row]
-        cell.configure(with: challenge)
-        return cell
-    }
-
-    // Manejar la selección de una fila
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let challenge = challenges[indexPath.row]
-        showChallengeDetail(challenge: challenge)
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-
-    // Tamaño de la fila (opcional)
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100 // Ajusta según el diseño de la celda
-    }
-
-    
-    // Función para mostrar el detalle del desafío
-    func showChallengeDetail(challenge: ChallengeEntity) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let detailVC = storyboard.instantiateViewController(withIdentifier: "ChallengeDetailViewController") as? ChallengeDetailViewController {
-            detailVC.challenge = challenge
-            detailVC.modalPresentationStyle = .overFullScreen
-            detailVC.modalTransitionStyle = .crossDissolve
-            present(detailVC, animated: true, completion: nil)
-        }
-    }
-     
-}

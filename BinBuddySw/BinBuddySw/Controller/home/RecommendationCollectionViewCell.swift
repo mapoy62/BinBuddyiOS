@@ -21,5 +21,7 @@ class RecommendationCollectionViewCell: UICollectionViewCell {
             } else {
                 appImageView.image = UIImage(named: "placeholder")
             }
+            appImageView.layer.cornerRadius = appImageView.frame.width / 2
+            appImageView.clipsToBounds = true
         }
 }
