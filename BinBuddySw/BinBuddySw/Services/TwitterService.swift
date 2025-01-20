@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class TwitterService {
-    private let bearerToken = "AAAAAAAAAAAAAAAAAAAAALDCxgEAAAAAYNUbPmZlwtHYl0xrD%2BIrNRunXlI%3DMQcIEwWRk4hhINjdmSP8I7Lr20MyQw1GZclUZAIW1r6WXjJ2Ay"
+    private let bearerToken = "AAAAAAAAAAAAAAAAAAAAABIuyQEAAAAAfI37Fd2m5Pm8r7R0OrBiMaNaRtk%3DuHdP5oS6xSW6DkTK2et5N4faHDfvwhe0RXfmTpyXlF86wFIYpz"
 
     func fetchTweets(with hashtag: String, maxResults: Int = 10, completion: @escaping (Result<[Tweet], Error>) -> Void) {
             let urlString = "https://api.twitter.com/2/tweets/search/recent?query=%23\(hashtag)&max_results=\(maxResults)"
